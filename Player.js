@@ -314,8 +314,8 @@ Player.prototype.draw = function()
 	{
 		context.drawImage(shadowImage, this.position.x - 16, this.position.y - 14);
 	
-		this.lsprite.draw(context, this.position.x, this.position.y);
-		this.sprite.draw(context, this.position.x, this.position.y);
+		//this.lsprite.draw(context, this.position.x, this.position.y);
+		//this.sprite.draw(context, this.position.x, this.position.y);
 		if(this.equipment.rightHandSlot.items[0] != "undefined")
 		{
 			this.sSprite.draw(context, this.position.x, this.position.y);

@@ -53,6 +53,23 @@ function drawRect(color, vec_p, vec_s)
 	}
 }
 
+function Tick(timeToWait, deltaTime)
+{
+	var initSec = timeToWait;
+	initSec -= deltaTime;
+	
+	if(initSec <= 0)
+	{
+		initSec = timeToWait;
+		return true;
+	}
+	else
+	{
+		//console.log(initSec);
+		return false;
+	}
+}
+
 function States()
 {
 	(function() {

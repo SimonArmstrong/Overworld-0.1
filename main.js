@@ -23,10 +23,14 @@ var RIGHT_WALL = new Wall(new Vector2(1024, 0), new Vector2(32, canvas.height), 
 
 var chests = [];
 chests.push(chest);
+
 var colliders = [];
 colliders.push(chest);
 colliders.push(LEFT_WALL);
 colliders.push(RIGHT_WALL);
+
+var enemies = [];
+enemies.push(dagg);
 
 
 
@@ -48,6 +52,34 @@ function run()
 	context.drawImage(floorTestImg, 370, 380);
 	context.drawImage(floorTestImg, 970, 380);
 	*/
+	
+	for(var i = 0; i < enemies.length; i++)
+	{
+		enemies[i].draw();
+		for(var j = 0; j < colliders.length; j++)
+		{
+			if(enemies[i].collider.isTouching(colliders[j].collider))
+			{
+				switch(enemies[i].direction)
+				{
+					case 0:
+					enemies[i].direction = 1;
+					break;
+					case 1:
+					enemies[i].direction = 0;
+					break;
+					case 2:
+					enemies[i].direction = 3;
+					break;
+					case 3:
+					enemies[i].direction = 2;
+					break;
+				}
+			}
+		}
+		enemies[i].update(deltaTime);
+	}
+	
 	player.draw();
 	
 	
