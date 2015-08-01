@@ -16,6 +16,8 @@ var uniqueChestLidImage = document.createElement("img");
 var legendaryChestLidImage = document.createElement("img");
 
 var shadowImage = document.createElement("img");
+
+var randomChest = Math.floor(Math.random() * 400);
 shadowImage.src = "chestShadow.png";
 
 commonChestImage.src 	    = "commonChest.png";
@@ -32,8 +34,10 @@ legendaryChestLidImage.src	= "legendaryChestLid.png";
 
 var Container = function(contents, vec_p, r)
 {
+	this.layer = 2;
+	
 	this.position = vec_p;
-	this.scale = new Vector2(32, 32);
+	this.scale = new Vector2(32, 12);
 	this.contents = [];
 	for(var i = 0; i < contents.length; i++)
 	{
@@ -45,7 +49,7 @@ var Container = function(contents, vec_p, r)
 	this.image;
 	this.pushable = false;
 	this.closedImage;
-	this.collider = new Collider(this.type, this.position, this.scale, this);
+	this.collider = new Collider(this.type, this.position.add(new Vector2(0, 16)), this.scale, this);
 	if(this.rarity >= 120)
 	{
 		this.closedImage = commonChestLidImage;
@@ -122,6 +126,8 @@ Container.prototype.draw = function()
 {
 	context.drawImage(shadowImage, this.position.x, this.position.y);
 	context.drawImage(this.image, this.position.x, this.position.y);
+	
+	this.collider.position = this.position.add(new Vector2(0, 20));
 	
 	if(this.inventory.open === false)
 	{

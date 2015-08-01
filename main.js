@@ -1,10 +1,19 @@
-var randomChest = Math.floor(Math.random() * 400);
-console.log(randomChest);
-var chest = new Container([Potions[0], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x - 64, player.position.y), randomChest);
-chest.pushable = true;
+var DRAWCOLLISION = false;
 
-var WIPImage = document.createElement("img");
-WIPImage.src = "title screen.png";
+
+var randomChest = Math.floor(Math.random() * 400);
+var chest = new Container([Potions[0], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x - 64, player.position.y), randomChest);
+var achest = new Container([Potions[0], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x + 64, player.position.y + 10), randomChest);
+
+//chest.pushable = true;
+
+{	//Title Image
+	var WIPImage = document.createElement("img");
+	WIPImage.src = "title screen.png";
+
+	var DEVICO = document.createElement("img");
+	DEVICO.src = "DevIcon.png"
+}
 
 function checkInput()
 {
@@ -23,9 +32,11 @@ var RIGHT_WALL = new Wall(new Vector2(1024, 0), new Vector2(32, canvas.height), 
 
 var chests = [];
 chests.push(chest);
+chests.push(achest);
 
 var colliders = [];
 colliders.push(chest);
+colliders.push(achest);
 colliders.push(LEFT_WALL);
 colliders.push(RIGHT_WALL);
 
@@ -42,16 +53,9 @@ function run()
 	drawRect("#000", TOP_LEFT, BOTTOM_RIGHT);
 	
 	context.drawImage(WIPImage, 10, 100);
+	context.drawImage(DEVICO, 0, 630);
 	
-	dungeon.draw(deltaTime);
-	
-	/*
-	context.drawImage(floorTestImg, 670, 132);
-	context.drawImage(floorTestImg, 670, 380);
-	context.drawImage(floorTestImg, 670, 632);
-	context.drawImage(floorTestImg, 370, 380);
-	context.drawImage(floorTestImg, 970, 380);
-	*/
+	//dungeon.draw(deltaTime);
 	
 	for(var i = 0; i < enemies.length; i++)
 	{
@@ -80,8 +84,12 @@ function run()
 		enemies[i].update(deltaTime);
 	}
 	
-	player.draw();
-	
+	//Layering for player
+	for(var i = 0; i < colliders.length; i++)
+	{
+		if(player.detectionRadius.isTouching(colliders[i].collider) && colliders[i].position.y >= player.position.y - 10)
+			player.draw();
+	}
 	
 	for(var i = 0; i < chests.length; i++)
 	{
@@ -148,6 +156,10 @@ function run()
 			}
 		}
 		colliders[i].draw();
+		if(player.detectionRadius.isTouching(colliders[i].collider) && colliders[i].position.y <= player.position.y - 10)
+		{
+			player.draw();
+		}
 	}
 	
 	if(dialogueWindow.show)
@@ -157,11 +169,16 @@ function run()
 	}
 	
 	player.drawUI();
-	player.collider.draw("#f00");
-	player.ABOVE.draw("#0f0");
-	player.BELOW.draw("#0f0");
-	player.LEFT.draw("#0f0");
-	player.RIGHT.draw("#0f0");
+	
+	if(DRAWCOLLISION)
+	{
+		player.collider.draw("#f00");
+		player.ABOVE.draw("#0f0");
+		player.BELOW.draw("#0f0");
+		player.LEFT.draw("#0f0");
+		player.RIGHT.draw("#0f0");
+		player.detectionRadius.draw("#f0f");
+	}
 	
 	devInv.draw();
 	devInv.update();
@@ -182,7 +199,7 @@ function run()
 			chests[i].Add(selectedItem);
 			selectedItem = "undefined";
 		}
-		chests[i].collider.draw("#00f");
+//		chests[i].collider.draw("#00f");
 	}
 }
 

@@ -3,6 +3,7 @@ var Collider = function(tag, vec_p, vec_s, atc){
 	this.scale = vec_s;
 	this.position = vec_p;
 	this.object = atc;
+	colliders.push(this);
 }
 
 Collider.prototype.isTouching = function(col)

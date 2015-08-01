@@ -70,6 +70,9 @@ function Tick(timeToWait, deltaTime)
 	}
 }
 
+var colliders = [];
+var enemies = [];
+
 function States()
 {
 	(function() {

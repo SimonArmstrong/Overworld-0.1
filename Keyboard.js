@@ -27,6 +27,8 @@ var Keyboard = function()
 	this.Q 			= 81;	
 	this.F 			= 70;
 	this.E 			= 69;	
+	this.X 			= 88;	
+	this.Z   		= 90;
 	
 	this.ONE   		= 49;	
 	this.TWO   		= 50;	

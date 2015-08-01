@@ -5,14 +5,14 @@ var Vector2 = function(x, y){
 	this.y = y;
 }
 Vector2.prototype.add = function(vec){
-	return new Vector2(this.x + vec.x, this.y + vedc.y);
+	return new Vector2(this.x + vec.x, this.y + vec.y);
 }
 Vector2.prototype.subtract = function(vec){
-	return new Vector2(this.x - vec.x, this.y - vedc.y);
+	return new Vector2(this.x - vec.x, this.y - vec.y);
 }
 Vector2.prototype.multiply = function(vec){
-	return new Vector2(this.x * vec.x, this.y * vedc.y);
+	return new Vector2(this.x * vec.x, this.y * vec.y);
 }
 Vector2.prototype.divide = function(vec){
-	return new Vector2(this.x / vec.x, this.y / vedc.y);
+	return new Vector2(this.x / vec.x, this.y / vec.y);
 }

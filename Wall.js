@@ -23,3 +23,5 @@ Wall.prototype.draw = function()
 		context.drawImage(this.tile, this.collider.position.x, y);
 	}
 }
+
+var walls = [];

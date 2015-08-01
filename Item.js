@@ -156,6 +156,36 @@ Recipes.push(new Recipe("Calamity", "Dark Sword", "Light Sword", 4));
 
 Items = Items.concat(Potions, Weapons, Armours, Recipes);	//Concat all item types!!
 
+var commonItems = [];
+var rareItems = [];
+var greatItems = [];
+var uniqueItems = [];
+var legendaryItems = [];
+
+for(var i = 0; i < Items.length; i++)
+{
+	if(Items[i].rarity = 0)
+	{
+		commonItems.push(Items[i]);
+	}
+	else if(Items[i].rarity = 1)
+	{
+		rareItems.push(Items[i]);
+	}
+	else if(Items[i].rarity = 2)
+	{
+		greatItems.push(Items[i]);
+	}
+	else if(Items[i].rarity = 3)
+	{
+		uniqueItems.push(Items[i]);
+	}
+	else
+	{
+		legendaryItems.push(Items[i]);
+	}
+}
+
 var devInv = new Inventory(25, 6, "D E V");
 devInv.open = true;
 devInv.position = new Vector2(canvas.width - devInv.scale.x - 4, 4);

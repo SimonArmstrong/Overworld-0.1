@@ -17,6 +17,13 @@ var WALK_LEFT = 2;
 var WALK_RIGHT = 3;
 var ATTACK_LEFT = 4;
 var ATTACK_RIGHT = 5;
+ 
+//Animation States
+var IDLE = 0;
+var MOVING = 1;
+var ATTACKING = 2;
+var HIT = 3;
+var ROLLING = 4;
 
 var Player = function()
 {
@@ -29,12 +36,13 @@ var Player = function()
 	this.ObjectType = "Entity";
 	this.attacking = false;
 	this.atkCooldown = 0.5;
+	this.detectionRadius = new Collider("player", new Vector2(this.position.x - 128, this.position.y - 128), new Vector2(288, 288));
 	
 	//Direction Check Collision
-	this.ABOVE = new Collider("player", new Vector2(this.position.x, this.position.y - 32), this.scale, this);
-	this.BELOW = new Collider("player", new Vector2(this.position.x, this.position.y + 32), this.scale, this);
-	this.LEFT = new Collider("player", new Vector2 (this.position.x - 32, this.position.y), this.scale, this);
-	this.RIGHT = new Collider("player", new Vector2(this.position.x + 32, this.position.y), this.scale, this);
+	this.ABOVE = new Collider("player", new Vector2(this.position.x, this.position.y - 32), new Vector2(6,32), this);
+	this.BELOW = new Collider("player", new Vector2(this.position.x, this.position.y + 32), new Vector2(6, 32), this);
+	this.LEFT = new Collider("player", new Vector2 (this.position.x - 32, this.position.y), new Vector2(32, 6), this);
+	this.RIGHT = new Collider("player", new Vector2(this.position.x + 32, this.position.y), new Vector2(32, 6), this);
 	
 	//Player Image
 	this.sprite = new Sprite("player_anim.png");
@@ -42,6 +50,7 @@ var Player = function()
 	this.sprite.buildAnimation(4, 2, 32, 32, 0.1, [4]);
 	this.sprite.buildAnimation(4, 2, 32, 32, 0.1, [1,2,3,2,1]);
 	this.sprite.buildAnimation(4, 2, 32, 32, 0.1, [5,6,7,6,5]);
+	
 	this.lsprite = new Sprite("player_anim_lower.png");
 	this.lsprite.buildAnimation(4, 2, 32, 32, 0.1, [0]);
 	this.lsprite.buildAnimation(4, 2, 32, 32, 0.1, [4]);
@@ -63,7 +72,8 @@ var Player = function()
 	this.shSprite.buildAnimation(4, 2, 32, 32, 0.1, [4]);
 	this.shSprite.buildAnimation(4, 2, 32, 32, 0.1, [1,2,3,2,1]);
 	this.shSprite.buildAnimation(4, 2, 32, 32, 0.1, [5,6,7,6,5]);
-								
+	
+	//Animation Offsets
 	for(var i = 0; i < 6; i++)
 	{
 		this.sprite.setAnimationOffset(i, -this.scale.x/2, -this.scale.y/2);
@@ -71,6 +81,7 @@ var Player = function()
 		this.shSprite.setAnimationOffset(i, -this.scale.x/2, -this.scale.y/2);
 		this.lsprite.setAnimationOffset(i, -this.scale.x/2, -this.scale.y/2);
 	}
+	this.animState = IDLE;
 	
 	//Equipment
 	this.equipment = new Equipment();
@@ -100,14 +111,14 @@ var Player = function()
 	this.experience = new Stat("Exp", 0, 100);
 	this.level = new Stat("Level", 1, 300)
 	
-	//Stat array
+	//Stat arrays
 	this.Stats = [];
 	this.bStats = [];
 }
 
 Player.prototype.input = function()
 {
-	if(player.isDead === false)
+	if(player.isDead === false)					//Only take input for the player if they're not dead.
 	{
 		if(Input.KeyDown(Input.KEY_UP))
 		{
@@ -134,48 +145,78 @@ Player.prototype.input = function()
 			this.moving = false;
 		}
 	}
-	else
+	else	//Stop moving if no movement inputs are current
 	{
 		this.moving = false;
 	}
 		
-	if(Input.keys[Input.I] === true && this.inventory.open === false)
+	if(Input.keys[Input.I] === true && this.inventory.open === false)	//Opens the inventory if it's currently closed when I is pressed.
 	{
 		this.inventory.open = true;
 	}
-	else if(Input.keys[Input.I] === true && this.inventory.open === true)
+	else if(Input.keys[Input.I] === true && this.inventory.open === true)	//Closes the inventory if it's currently open when I is pressed.
 	{
 		this.inventory.open = false;
 	}
 	
-	if(Input.keys[Input.E] === true && this.equipment.open === false)
+	if(Input.keys[Input.E] === true && this.equipment.open === false)	//Opens the eqp inventory if it's currently closed when E is pressed.
 	{
 		this.equipment.open = true;
 	}
-	else if(Input.keys[Input.E] === true && this.equipment.open === true)
+	else if(Input.keys[Input.E] === true && this.equipment.open === true)	//Closes the eqp inventory if it's currently open when E is pressed.
 	{
 		this.equipment.open = false;
 	}
 	
-	if(Input.keys[Input.Q] === true && this.craft.open === false)
+	if(Input.keys[Input.Q] === true && this.craft.open === false)	//Opens the craft inventory if it's currently closed when Q is pressed.
 	{
 		this.craft.open = true;
 	}
-	else if(Input.keys[Input.Q] === true && this.craft.open === true)
-	{
+	else if(Input.keys[Input.Q] === true && this.craft.open === true)	//Closes the craft inventory if it's currently open when Q is pressed.
+	{	
 		this.craft.open = false;
 	}
 }
 
 Player.prototype.update = function(deltaTime)
 {
-	this.collider.position = new Vector2(this.position.x - 8, this.position.y - 8);
-	this.collider.scale = new Vector2(48, 48);
+	this.collider.position = new Vector2(this.position.x - 10, this.position.y + 6);
+	this.collider.scale = new Vector2(20, 10);
 	
-	this.ABOVE.position = new Vector2(this.position.x, this.position.y - 32);
-	this.BELOW.position = new Vector2(this.position.x, this.position.y + 32);
-	this.LEFT.position = new Vector2 (this.position.x - 32, this.position.y);
-	this.RIGHT.position = new Vector2(this.position.x + 32, this.position.y);
+	this.ABOVE.position = new Vector2(this.position.x - 3, this.position.y - 24);
+	this.BELOW.position = new Vector2(this.position.x - 3, this.position.y + 14);
+	this.LEFT.position = new Vector2 (this.position.x - 40, this.position.y + 8);
+	this.RIGHT.position = new Vector2(this.position.x + 8, this.position.y + 8);
+	
+	this.lsprite.update(deltaTime);
+	this.sprite.update(deltaTime);
+	this.sSprite.update(deltaTime);
+	this.shSprite.update(deltaTime);
+	
+	for(var i = 0; i < colliders.length; i++)
+	{
+		if(colliders[i].tag != "player" && colliders[i].tag != "enemy")
+		{
+			if(this.ABOVE.isTouching(colliders[i]) && this.collider.isTouching(colliders[i]))
+			{
+				this.position.y += this.speed.maximum * deltaTime;
+			}
+			else if(this.BELOW.isTouching(colliders[i]) && this.collider.isTouching(colliders[i]))
+			{
+				this.position.y -= this.speed.maximum * deltaTime;
+			}
+			else if(this.LEFT.isTouching(colliders[i]) && this.collider.isTouching(colliders[i]))
+			{
+				this.position.x += this.speed.maximum * deltaTime;
+			}
+			else if(this.RIGHT.isTouching(colliders[i]) && this.collider.isTouching(colliders[i]))
+			{
+				this.position.x -= this.speed.maximum * deltaTime;
+			}
+		}
+	}
+	
+	this.detectionRadius = new Collider("player", new Vector2(this.position.x - 144, this.position.y - 132), new Vector2(288, 288));
 	
 	if(this.equipment.righthand != "undefined")
 	{
@@ -219,43 +260,73 @@ Player.prototype.update = function(deltaTime)
 	else
 	{
 		this.atkCooldown -= deltaTime;
-		if(this.direction === DIR_UP && this.moving)
+		
+		if(this.moving)
 		{
-			this.position.y -= this.speed.maximum * deltaTime;
+			this.animState = MOVING;
 		}
-		if(this.direction === DIR_DOWN && this.moving)
+		
+		if(this.animState === MOVING)
 		{
-			this.position.y += this.speed.maximum * deltaTime;
+			if(this.direction === DIR_UP && this.moving)
+			{
+				this.position.y -= this.speed.maximum * deltaTime;
+			}
+			if(this.direction === DIR_DOWN && this.moving)
+			{
+				this.position.y += this.speed.maximum * deltaTime;
+			}
+			
+			if(this.direction === DIR_LEFT && this.moving)
+			{
+				this.position.x -= this.speed.maximum * deltaTime;
+				
+				if(this.sprite.currentFrame === this.sprite.animations.length)
+				{
+					this.sprite.currentFrame = 0;
+				}
+				if(this.sprite.currentFrame === 0)
+				{
+					this.sprite.setAnimation(WALK_LEFT);
+					this.sSprite.setAnimation(WALK_LEFT);
+					this.shSprite.setAnimation(WALK_LEFT);
+					this.lsprite.setAnimation(WALK_LEFT);
+				}
+			}
+			else if(this.direction === DIR_LEFT)
+			{
+				this.sprite.setAnimation(IDLE_LEFT); 
+				this.sSprite.setAnimation(IDLE_LEFT);
+				this.shSprite.setAnimation(IDLE_LEFT);
+				this.lsprite.setAnimation(IDLE_LEFT);
+			}
+			
+			if(this.direction === DIR_RIGHT && this.moving)
+			{
+				if(this.sprite.currentFrame === this.sprite.animations.length)
+				{
+					this.sprite.currentFrame = 0;
+				}
+				if(this.sprite.currentFrame === 0)
+				{
+					this.sprite.setAnimation(WALK_RIGHT);
+					this.sSprite.setAnimation(WALK_RIGHT);
+					this.shSprite.setAnimation(WALK_RIGHT);
+					this.lsprite.setAnimation(WALK_RIGHT);
+				}
+				this.position.x += this.speed.maximum * deltaTime;
+			}
+			else if(this.direction === DIR_RIGHT)
+			{
+				this.sprite.setAnimation(IDLE_RIGHT); 
+				this.sSprite.setAnimation(IDLE_RIGHT);
+				this.shSprite.setAnimation(IDLE_RIGHT);
+				this.lsprite.setAnimation(IDLE_RIGHT);
+			}
 		}
-		if(this.direction === DIR_LEFT && this.moving)
+		else if(this.animState === ATTACKING)
 		{
-			this.position.x -= this.speed.maximum * deltaTime;
-			this.sprite.setAnimation(WALK_LEFT);
-			this.sSprite.setAnimation(WALK_LEFT);
-			this.shSprite.setAnimation(WALK_LEFT);
-			this.lsprite.setAnimation(WALK_LEFT);
-		}
-		else if(this.direction === DIR_LEFT)
-		{
-			this.sprite.setAnimation(IDLE_LEFT); 
-			this.sSprite.setAnimation(IDLE_LEFT);
-			this.shSprite.setAnimation(IDLE_LEFT);
-			this.lsprite.setAnimation(IDLE_LEFT);
-		}
-		if(this.direction === DIR_RIGHT && this.moving)
-		{
-			this.sprite.setAnimation(WALK_RIGHT);
-			this.sSprite.setAnimation(WALK_RIGHT);
-			this.shSprite.setAnimation(WALK_RIGHT);
-			this.lsprite.setAnimation(WALK_RIGHT);
-			this.position.x += this.speed.maximum * deltaTime;
-		}
-		else if(this.direction === DIR_RIGHT)
-		{
-			this.sprite.setAnimation(IDLE_RIGHT); 
-			this.sSprite.setAnimation(IDLE_RIGHT);
-			this.shSprite.setAnimation(IDLE_RIGHT);
-			this.lsprite.setAnimation(IDLE_RIGHT);
+			
 		}
 	}
 
@@ -296,10 +367,6 @@ Player.prototype.update = function(deltaTime)
 			this.Stats[i].amount = 0;
 		}
 	}
-	this.lsprite.update(deltaTime);
-	this.sprite.update(deltaTime);
-	this.sSprite.update(deltaTime);
-	this.shSprite.update(deltaTime);
 }
 
 Player.prototype.LevelUp = function()
@@ -314,8 +381,8 @@ Player.prototype.draw = function()
 	{
 		context.drawImage(shadowImage, this.position.x - 16, this.position.y - 14);
 	
-		//this.lsprite.draw(context, this.position.x, this.position.y);
-		//this.sprite.draw(context, this.position.x, this.position.y);
+		this.lsprite.draw(context, this.position.x, this.position.y);
+		this.sprite.draw(context, this.position.x, this.position.y);
 		if(this.equipment.rightHandSlot.items[0] != "undefined")
 		{
 			this.sSprite.draw(context, this.position.x, this.position.y);
