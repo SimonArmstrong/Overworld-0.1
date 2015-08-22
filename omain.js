@@ -136,7 +136,7 @@ function checkInput()
 	}
 	if(Input.keys[Input.Z] === true && DEV)
 	{
-		player.level.amount += 1;
+		player.LevelUp();
 	}
 }
 
