@@ -56,7 +56,7 @@ var Container = function(contents, vec_p, r)
 		this.image = commonChestImage;
 		this.inventory = new Inventory(2, 3, "COMMON CHEST");
 	}
-	else if(this.rarity >= 50)
+	else if(this.rarity >= 60)
 	{
 		this.closedImage = rareChestLidImage;
 		this.image = commonChestImage;
@@ -66,19 +66,19 @@ var Container = function(contents, vec_p, r)
 	{
 		this.closedImage = greatChestLidImage;
 		this.image = commonChestImage;
-		this.inventory = new Inventory(2, 2, "GREAT CHEST");
+		this.inventory = new Inventory(2, 3, "GREAT CHEST");
 	}
 	else if(this.rarity >= 5)
 	{
 		this.closedImage = uniqueChestLidImage;
 		this.image = commonChestImage;
-		this.inventory = new Inventory(1, 2, "UNIQUE CHEST");
+		this.inventory = new Inventory(2, 3, "UNIQUE CHEST");
 	}
 	else
 	{
 		this.closedImage = legendaryChestLidImage;
 		this.image = commonChestImage;
-		this.inventory = new Inventory(1, 1, "LEGENDARY CHEST");	
+		this.inventory = new Inventory(2, 3, "LEGENDARY CHEST");	
 	}
 }
 
@@ -108,7 +108,7 @@ Container.prototype.MouseOver = function()
 	if(mousePosition.x >= this.position.x &&
 	   mousePosition.x <= this.position.x + this.scale.x &&
 	   mousePosition.y >= this.position.y &&
-	   mousePosition.y <= this.position.y + this.scale.y)
+	   mousePosition.y <= this.position.y + this.scale.y + 14)
 	{
 		return true;
 	}

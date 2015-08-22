@@ -4,12 +4,29 @@ var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
 
-var entities = [];
+var randomChest = Math.floor(Math.random() * 400);
+var randomChesta = Math.floor(Math.random() * 400);
+var chest = new Container([Potions[0], Armours[1], Weapons[3], Recipes[0]], new Vector2(player.position.x - 64, player.position.y), randomChest);
+var achest = new Container([Weapons[9], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x + 64, player.position.y + 10), randomChesta);
+
+entities.push(chest);
+entities.push(achest);
+
 function DrawEntities()
 {
 	for(var i = 0; i < entities.length; i++)
 	{
 		entities[i].draw();
+		if(entities[i].MouseOver() && dblClicked === true)
+		{
+			entities[i].Open();
+			dblClicked = false;
+		}
+		if(entities[i].open)
+		{
+			entities[i].inventory.draw();
+			entities[i].inventory.update();
+		}
 	}
 	for(var i = 0; i < enemies.length; i++)
 	{
@@ -37,12 +54,10 @@ function DrawPlayer(deltaTime)
 	
 	if(DRAWCOLLISION)
 	{
-		player.collider.draw("#f00");
-		player.ABOVE.draw("#0f0");
-		player.BELOW.draw("#0f0");
-		player.LEFT.draw("#0f0");
-		player.RIGHT.draw("#0f0");
-		player.detectionRadius.draw("#f0f");
+		for(var i = 0; i < colliders.length; i++)
+		{
+			colliders[i].draw("#f00");
+		}
 	}
 	
 	for(var i = 0; i < player.Stats.length; i++)
@@ -68,6 +83,14 @@ function DrawDev(deltaTime)
 	context.fillText("Entities: " + entities.length, 10, 16);
 	context.fillText("Enemies: " + enemies.length, 10, 28);
 	context.fillText("Frames: " + fps, 10, 40);	
+	context.fillText("---Controls---", 10, 66);	
+	context.fillText("Spawn Enemy: P", 10, 78);	
+	context.fillText("Open Inventory: I", 10, 90);	
+	context.fillText("Open Equipment: E", 10, 104);	
+	context.fillText("Open Crafting: Q ", 10, 116);	
+	context.fillText("Movement: W, A, S, D", 10, 128);	
+	context.fillText("Hotbar: 1 - 0", 10, 140);	
+	context.fillText("Increase Level: Z", 10, 152);
 	
 	//devInv.draw();
 	//devInv.update();
@@ -76,12 +99,19 @@ function DrawDev(deltaTime)
 function DrawUI()
 {
 	player.drawUI();
+	
+	var instImg = document.createElement("img");
+	instImg.src = "Instructions.png";
+	context.drawImage(instImg, 0, 0);
+	
 	player.inventory.draw();
 	player.inventory.update();
 	player.equipment.draw();
 	player.equipment.update();
 	player.craft.draw();
 	player.craft.update();
+	if(DEV)
+		devInv.draw();
 	if(mouseMoving){
 		context.drawImage(mouseIcon, mousePosition.x, mousePosition.y);
 	}
@@ -102,7 +132,11 @@ function checkInput()
 	if(Input.keys[Input.P] === true && DEV)
 	{
 		//var rndMob = Math.floor(Math.random() * 1);
-		enemies.push(new Enemy("Dagg", new Vector2(58, 28), false, Math.floor(Math.random() * 10) + 1));
+		enemies.push(new Enemy("Dagg", new Vector2(58, 28), true, Math.floor(Math.random() * 10) + 1));
+	}
+	if(Input.keys[Input.Z] === true && DEV)
+	{
+		player.level.amount += 1;
 	}
 }
 

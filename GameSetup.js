@@ -72,6 +72,8 @@ function Tick(timeToWait, deltaTime)
 
 var colliders = [];
 var enemies = [];
+var entities = [];
+var chests = [];
 
 function States()
 {

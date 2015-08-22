@@ -1,8 +1,7 @@
-
 var Dungeon = function()
 {
-	this.ROOM_WIDTH = 1280;
-	this.ROOM_HEIGHT = 736;
+	this.ROOM_WIDTH = 608;
+	this.ROOM_HEIGHT = 448;
 	
 	this.position = new Vector2((canvas.width / 2) - (this.ROOM_WIDTH / 2), (canvas.height / 2) - (this.ROOM_HEIGHT / 2));
 	this.PlayerPositionRelativeTo = new Vector2(this.position.x + player.position.x, this.position.y + player.position.y);
@@ -25,7 +24,7 @@ Dungeon.prototype.draw = function()
 	drawRect("#222", this.position, new Vector2(this.ROOM_WIDTH, this.ROOM_HEIGHT));
 	this.position = new Vector2((canvas.width / 2) - (this.ROOM_WIDTH / 2), (canvas.height / 2) - (this.ROOM_HEIGHT / 2));
 	this.PlayerPositionRelativeTo = new Vector2(this.position.x + player.position.x, this.position.y);
-	drawRect("#f00", this.PlayerPositionRelativeTo, new Vector2(2, 2));
+	//drawRect("#f00", this.PlayerPositionRelativeTo, new Vector2(2, 2));
 	
 	for(var i = 0; i < this.walls.length; i++)
 	{

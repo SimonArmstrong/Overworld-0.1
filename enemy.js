@@ -1,10 +1,19 @@
+var COLLIDEWITHOTHERS = false;
+
 var Enemy = function(name, vec_s, hostile, level)
 {
 	this.position = new Vector2(CENTER.x, CENTER.y);
 	this.scale = vec_s;
 	this.name = name;
 	this.id = enemies.length;
-	this.collider = new Collider("enemy" + this.id, this.position, this.scale);
+	if(COLLIDEWITHOTHERS)
+	{
+		this.collider = new Collider("enemy" + this.id, this.position, this.scale);
+	}
+	else
+	{
+		this.collider = new Collider("enemy", this.position, this.scale);
+	}
 	
 	this.image = document.createElement("img");
 	this.image.src = this.name + ".png";
@@ -46,6 +55,7 @@ Enemy.prototype.draw = function()
 			context.fillText("LV." + this.level + " " + this.name, this.position.x, this.position.y - 18);
 			drawRect("#0f0", new Vector2(this.position.x, this.position.y - 12), new Vector2((this.health.amount / this.health.maximum) * 72, 4));
 		}
+		this.health.amount = 19;
 		if(this.health.amount <= 0)
 		{
 			this.health.amount = 0;
@@ -96,24 +106,51 @@ Enemy.prototype.update = function(deltaTime)
 			}
 			for(var i = 0; i < colliders.length; i++)
 			{
-				if(colliders[i].tag != "player" && colliders[i].tag != "enemy" + this.id)
+				if(COLLIDEWITHOTHERS)
 				{
-					if(this.collider.isTouching(colliders[i]))
+					if(colliders[i].tag != "player" && colliders[i].tag != "enemy" + this.id)
 					{
-						switch(this.direction)
+						if(this.collider.isTouching(colliders[i]))
 						{
-							case 0:
-							this.direction = 1;
-							break;
-							case 1:
-							this.direction = 0;
-							break;
-							case 2:
-							this.direction = 3;
-							break;
-							case 3:
-							this.direction = 2;
-							break;
+							switch(this.direction)
+							{
+								case 0:
+								this.direction = 1;
+								break;
+								case 1:
+								this.direction = 0;
+								break;
+								case 2:
+								this.direction = 3;
+								break;
+								case 3:
+								this.direction = 2;
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					if(colliders[i].tag != "player" && colliders[i].tag != "enemy")
+					{
+						if(this.collider.isTouching(colliders[i]))
+						{
+							switch(this.direction)
+							{
+								case 0:
+								this.direction = 1;
+								break;
+								case 1:
+								this.direction = 0;
+								break;
+								case 2:
+								this.direction = 3;
+								break;
+								case 3:
+								this.direction = 2;
+								break;
+							}
 						}
 					}
 				}
@@ -134,7 +171,7 @@ Enemy.prototype.update = function(deltaTime)
 			this.position.y += this.speed * deltaTime;
 			break;
 		}
-		this.collider = new Collider("enemy" + this.id, this.position, this.scale);
+		this.collider.position = new Vector2(this.position.x, this.position.y);
 		
 		if(this.collider.isTouching(player.collider) && this.isHostile)
 		{

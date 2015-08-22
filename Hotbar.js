@@ -128,6 +128,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.ZERO] === true)
 		{
+			context.drawImage(hilightImage, this.slots[9].position.x, this.slots[9].position.y);
 			if(this.slots[9].items[this.slots[9].items.length - 1] != "undefined")
 			{
 				this.slots[9].items[this.slots[9].items.length - 1].use();
@@ -136,6 +137,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.ONE] === true)
 		{
+			context.drawImage(hilightImage, this.slots[0].position.x, this.slots[0].position.y);
 			if(this.slots[0].items[this.slots[0].items.length - 1] != "undefined")
 			{
 				this.slots[0].items[this.slots[0].items.length - 1].use();
@@ -144,6 +146,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.TWO] === true)
 		{
+			context.drawImage(hilightImage, this.slots[1].position.x, this.slots[1].position.y);
 			if(this.slots[1].items[this.slots[1].items.length - 1] != "undefined")
 			{
 				this.slots[1].items[this.slots[1].items.length - 1].use();
@@ -152,6 +155,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.THREE] === true)
 		{
+			context.drawImage(hilightImage, this.slots[2].position.x, this.slots[9].position.y);
 			if(this.slots[2].items[this.slots[2].items.length - 1] != "undefined")
 			{
 				this.slots[2].items[this.slots[2].items.length - 1].use();
@@ -160,6 +164,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.FOUR] === true)
 		{
+			context.drawImage(hilightImage, this.slots[3].position.x, this.slots[9].position.y);
 			if(this.slots[3].items[this.slots[3].items.length - 1] != "undefined")
 			{
 				this.slots[3].items[this.slots[3].items.length - 1].use();
@@ -168,6 +173,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.FIVE] === true)
 		{
+			context.drawImage(hilightImage, this.slots[4].position.x, this.slots[9].position.y);
 			if(this.slots[4].items[this.slots[4].items.length - 1] != "undefined")
 			{
 				this.slots[4].items[this.slots[4].items.length - 1].use();
@@ -176,6 +182,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.SIX] === true)
 		{
+			context.drawImage(hilightImage, this.slots[5].position.x, this.slots[9].position.y);
 			if(this.slots[5].items[this.slots[5].items.length - 1] != "undefined")
 			{
 				this.slots[5].items[this.slots[5].items.length - 1].use();
@@ -184,6 +191,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.SEVEN] === true)
 		{
+			context.drawImage(hilightImage, this.slots[6].position.x, this.slots[9].position.y);
 			if(this.slots[6].items[this.slots[6].items.length - 1] != "undefined")
 			{
 				this.slots[6].items[this.slots[6].items.length - 1].use();
@@ -192,6 +200,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.EIGHT] === true)
 		{
+			context.drawImage(hilightImage, this.slots[7].position.x, this.slots[9].position.y);
 			if(this.slots[7].items[this.slots[7].items.length - 1] != "undefined")
 			{
 				this.slots[7].items[this.slots[7].items.length - 1].use();
@@ -200,6 +209,7 @@ Hotbar.prototype.draw = function()
 		}
 		if(Input.keys[Input.NINE] === true)
 		{
+			context.drawImage(hilightImage, this.slots[8].position.x, this.slots[9].position.y);
 			if(this.slots[8].items[this.slots[8].items.length - 1] != "undefined")
 			{
 				this.slots[8].items[this.slots[8].items.length - 1].use();
