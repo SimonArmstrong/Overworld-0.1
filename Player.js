@@ -373,6 +373,7 @@ Player.prototype.LevelUp = function()
 {
 	player.health.maximum += player.health.maximum / 2;
 	player.mana.maximum += player.mana.maximum / 2;
+	player.level.current += 1;
 }
 
 Player.prototype.draw = function()
