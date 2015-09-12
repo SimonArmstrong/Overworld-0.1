@@ -55,7 +55,7 @@ Enemy.prototype.draw = function()
 			context.fillText("LV." + this.level + " " + this.name, this.position.x, this.position.y - 18);
 			drawRect("#0f0", new Vector2(this.position.x, this.position.y - 12), new Vector2((this.health.amount / this.health.maximum) * 72, 4));
 		}
-		this.health.amount = 19;
+		//this.health.amount = 19;
 		if(this.health.amount <= 0)
 		{
 			this.health.amount = 0;
