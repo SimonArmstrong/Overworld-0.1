@@ -138,6 +138,13 @@ function checkInput()
 	{
 		player.LevelUp();
 	}
+	if(Input.keys[Input.M] === true && DEV)
+	{
+		for(var i = 0; i < enemies.length; i++)
+		{
+			enemies[i].health.amount -= 1;
+		}
+	}
 }
 
 window.addEventListener('keydown', checkInput);
