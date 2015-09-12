@@ -142,7 +142,7 @@ function checkInput()
 	{
 		for(var i = 0; i < enemies.length; i++)
 		{
-			enemies[i].health.amount -= 1;
+			enemies[i].health.amount -= player.level.amount;
 		}
 	}
 }
