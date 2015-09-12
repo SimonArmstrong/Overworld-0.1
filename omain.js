@@ -7,7 +7,7 @@ var fpsTime = 0;
 var randomChest = Math.floor(Math.random() * 400);
 var randomChesta = Math.floor(Math.random() * 400);
 var chest = new Container([Potions[0], Armours[1], Weapons[3], Recipes[0]], new Vector2(player.position.x - 64, player.position.y), randomChest);
-var achest = new Container([Weapons[9], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x + 64, player.position.y + 10), randomChesta);
+var achest = new Container([Weapons[9], Potions[1], Weapons[3], Weapons[4]], new Vector2(player.position.x + 82, player.position.y + 10), randomChesta);
 
 entities.push(chest);
 entities.push(achest);
