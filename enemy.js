@@ -29,7 +29,8 @@ var Enemy = function(name, vec_s, hostile, level)
 	
 	this.health.maximum = this.health.maximum * this.level;
 	this.health.amount = this.health.amount * this.level;
-	//enemies.push(this);
+	//Add all enemies to enemies array
+	enemies.push(this);	
 }
 
 Enemy.prototype.draw = function()
